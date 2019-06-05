@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Memo Pad</string>
+    <string name="new_button">New</string>
+    <string name="list_button">List</string>
+    <string name="save">save</string>
+    <string name="begin">Type your message here</string>
+</resources>
