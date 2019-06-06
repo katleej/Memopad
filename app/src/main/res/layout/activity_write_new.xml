@@ -22,11 +22,14 @@
         android:hint="@string/begin" />
 
 
-    <Button
+    <ImageButton
         android:id="@+id/save"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_gravity="center"
-        android:text="@string/save" />
+        android:scaleType="fitCenter"
+        android:src="@drawable/save"
+        android:background="@null"
+        android:onClick="onClickSave"/>
 
 </LinearLayout>
