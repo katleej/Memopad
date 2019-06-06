@@ -27,14 +27,16 @@
         android:layout_width="60dp"
         android:layout_height="50dp"
         android:layout_gravity="center"
-        android:text="@string/new_button" />
+        android:text="@string/new_button"
+        android:onClick="onClickNew"/>
 
     <Button
         android:id="@+id/listbutton"
         android:layout_width="60dp"
         android:layout_height="50dp"
         android:layout_gravity="center"
-        android:text="@string/list_button" />
+        android:text="@string/list_button"
+        android:onClick="onClickList"/>
 
 
 

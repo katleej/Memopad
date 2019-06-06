@@ -11,10 +11,10 @@
         android:id="@+id/messagetitle"
         android:layout_width="160dp"
         android:layout_height="wrap_content"
-        android:hint="Title" />
+        android:hint="@string/title" />
 
     <EditText
-        android:id="@+id/hint"
+        android:id="@+id/message"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
