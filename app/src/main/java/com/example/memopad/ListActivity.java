@@ -12,22 +12,33 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.Collection;
 
+/**
+ * @author Katniss Lee
+ */
 public class ListActivity extends AppCompatActivity {
 
     private ArrayList<String> _messages = new ArrayList<String>();
-    private ListView listView = findViewById(R.id.listview);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
-        receiveMessage();
+        if (savedInstanceState != null) {
+            _messages = savedInstanceState.getStringArrayList("messages");
+        }
         //Set my listview with the received message
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
                 ListActivity.this, android.R.layout.simple_list_item_1, _messages);
+        ListView listView = findViewById(R.id.listview);
         listView.setAdapter(arrayAdapter);
+        receiveMessage();
         }
 
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putStringArrayList("messages", _messages);
+    }
     public void receiveMessage() {
         Intent intent = getIntent();
         String content = intent.getStringExtra("memo message");

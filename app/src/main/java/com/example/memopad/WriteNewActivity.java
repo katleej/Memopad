@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
-
+/**
+ * @author Katniss Lee
+ */
 public class WriteNewActivity extends AppCompatActivity {
 
     @Override
@@ -24,7 +26,7 @@ public class WriteNewActivity extends AppCompatActivity {
         EditText message = (EditText) findViewById(R.id.message);
         String messageText = message.getText().toString();
         Intent intent = new Intent(WriteNewActivity.this, ListActivity.class);
-        intent.putExtra("memo message", intent);
+        intent.putExtra("memo message", messageText);
         startActivity(intent);
     }
 }
