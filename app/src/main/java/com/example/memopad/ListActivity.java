@@ -23,16 +23,22 @@ public class ListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
-        if (savedInstanceState != null) {
-            _messages = savedInstanceState.getStringArrayList("messages");
-        }
         //Set my listview with the received message
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
-                ListActivity.this, android.R.layout.simple_list_item_1, _messages);
+                ListActivity.this, android.R.layout.simple_list_item_1, Message.messages);
         ListView listView = findViewById(R.id.listview);
         listView.setAdapter(arrayAdapter);
         receiveMessage();
+
+        AdapterView.OnItemClickListener itemClickListener =
+                new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        Intent intent = new Intent(ListActivity.this, WriteNewActivity.class);
+                    }
+                };
         }
+
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
@@ -42,7 +48,7 @@ public class ListActivity extends AppCompatActivity {
     public void receiveMessage() {
         Intent intent = getIntent();
         String content = intent.getStringExtra("memo message");
-        _messages.add(content);
+        Message.messages.add(content);
     }
 
     public void onClickAdd(View view) {
