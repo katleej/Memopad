@@ -6,11 +6,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ListView;
-
 import java.util.ArrayList;
-import java.util.Collection;
+
 
 /**
  * @author Katniss Lee
@@ -28,28 +26,21 @@ public class ListActivity extends AppCompatActivity {
                 ListActivity.this, android.R.layout.simple_list_item_1, Message.messages);
         ListView listView = findViewById(R.id.listview);
         listView.setAdapter(arrayAdapter);
-        receiveMessage();
 
         AdapterView.OnItemClickListener itemClickListener =
                 new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        String message = Message.messages.get(position);
+                        Message.messages.remove(position);
                         Intent intent = new Intent(ListActivity.this, WriteNewActivity.class);
+                        intent.putExtra("message", message);
+                        intent.putExtra("position", position);
+                        startActivity(intent);
                     }
                 };
+        listView.setOnItemClickListener(itemClickListener);
         }
-
-
-    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-        super.onSaveInstanceState(savedInstanceState);
-        savedInstanceState.putStringArrayList("messages", _messages);
-    }
-    public void receiveMessage() {
-        Intent intent = getIntent();
-        String content = intent.getStringExtra("memo message");
-        Message.messages.add(content);
-    }
 
     public void onClickAdd(View view) {
         Intent intent = new Intent(ListActivity.this, WriteNewActivity.class);

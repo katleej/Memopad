@@ -7,11 +7,31 @@
     android:orientation="vertical"
     tools:context=".WriteNewActivity">
 
-    <EditText
-        android:id="@+id/messagetitle"
-        android:layout_width="160dp"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/title" />
+        android:orientation="horizontal"
+        android:gravity="right">
+
+        <ImageButton
+            android:id="@+id/delete"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/trash"
+            android:layout_marginRight="8dp"
+            android:background="@null"
+            android:onClick="onClickDelete"/>
+
+        <ImageButton
+            android:id="@+id/share"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/share"
+            android:onClick="onClickShare"
+            android:background="@null"/>
+    </LinearLayout>
 
     <EditText
         android:id="@+id/message"
