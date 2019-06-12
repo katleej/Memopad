@@ -6,5 +6,9 @@
     <string name="save">save</string>
     <string name="savedlist">My Memos</string>
     <string name="begin">Type your message here</string>
+    <string name="create_new">Create New</string>
     <string-array name="memos"></string-array>
+    <string name="trash_memo">Trash</string>
+    <string name="share_memo">Share</string>
 </resources>
+

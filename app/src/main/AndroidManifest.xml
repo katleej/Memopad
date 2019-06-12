@@ -9,9 +9,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ListActivity" />
-        <activity android:name=".WriteNewActivity"/>
-        <activity android:name=".MainActivity">
+        <activity android:name=".ListActivity"
+            android:label="My Notes"/>
+        <activity android:name=".WriteNewActivity"
+            android:label="New"
+            android:parentActivityName=".ListActivity"/>
+        <activity
+            android:name=".MainActivity"
+            android:label="Memo Pad">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

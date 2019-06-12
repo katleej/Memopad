@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/trash_memo"
+        android:title="@string/create_new"
+        android:icon="@drawable/baseline_delete_white_18dp"
+        android:orderInCategory="1"
+        app:showAsAction="ifRoom" />
+
+    <item android:id="@+id/share_memo"
+        android:title="@string/share_memo"
+        android:orderInCategory="2"
+        app:showAsAction="ifRoom" />
+</menu>
