@@ -79,6 +79,7 @@ public class WriteNewActivity extends AppCompatActivity {
                         CharSequence text = "Your message has been deleted.";
                         int duration = Toast.LENGTH_SHORT;
                         Toast toast = Toast.makeText(WriteNewActivity.this, text, duration);
+
                         toast.show();
 
                         Intent intent = new Intent(WriteNewActivity.this, ListActivity.class);
