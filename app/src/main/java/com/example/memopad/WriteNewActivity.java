@@ -1,8 +1,12 @@
 package com.example.memopad;
 
 import android.app.AlertDialog;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -24,6 +28,8 @@ public class WriteNewActivity extends AppCompatActivity {
 
     private ShareActionProvider shareActionProvider;
     int TEXT_POSITION = -1;
+    SQLiteOpenHelper memopadDatabaseHelper;
+    SQLiteDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +49,10 @@ public class WriteNewActivity extends AppCompatActivity {
             EditText layout = (EditText) findViewById(R.id.message);
             layout.setText(message);
         }
+
+        //initialize db
+        memopadDatabaseHelper = new MemopadDatabaseHelper(this);
+        db = memopadDatabaseHelper.getWritableDatabase();
     }
 
     @Override
@@ -83,11 +93,14 @@ public class WriteNewActivity extends AppCompatActivity {
         toast.show();
 
         if (TEXT_POSITION != -1) {
-            Message.messages.remove(TEXT_POSITION);
+            db.delete("MEMO", "_id = ?", new String[] {Integer.toString(TEXT_POSITION)});
         }
+
         EditText message = (EditText) findViewById(R.id.message);
         String messageText = message.getText().toString();
-        Message.messages.add(0, messageText);
+        ContentValues cv = new ContentValues();
+        cv.put("MESSAGE", messageText);
+        db.insert("MEMO", null, cv);
         Intent intent = new Intent(WriteNewActivity.this, ListActivity.class);
         startActivity(intent);
     }

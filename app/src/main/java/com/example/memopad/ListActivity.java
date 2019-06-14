@@ -1,6 +1,9 @@
 package com.example.memopad;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -12,7 +15,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CursorAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
+
 import java.util.ArrayList;
 
 
@@ -22,6 +29,8 @@ import java.util.ArrayList;
 public class ListActivity extends AppCompatActivity {
 
     private ArrayList<String> _messages = new ArrayList<String>();
+    private SQLiteDatabase db;
+    private Cursor cursor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,12 +40,14 @@ public class ListActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        //Set my listview with the received message
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
-                ListActivity.this, android.R.layout.simple_list_item_1, Message.messages);
-        ListView listView = findViewById(R.id.listview);
-        listView.setAdapter(arrayAdapter);
+        MemopadDatabaseHelper memopadDatabaseHelper = new MemopadDatabaseHelper(this);
+        db = memopadDatabaseHelper.getWritableDatabase();
 
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
+                ListActivity.this, android.R.layout.simple_list_item_1, memopadDatabaseHelper.getMessages());
+
+        //Set my listview with the received message
+        ListView listView = findViewById(R.id.listview);
         AdapterView.OnItemClickListener itemClickListener =
                 new AdapterView.OnItemClickListener() {
                     @Override
