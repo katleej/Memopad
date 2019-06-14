@@ -5,6 +5,12 @@
     <item android:id="@+id/create_new_memo"
         android:title="@string/create_new"
         android:icon="@drawable/ic_add_white_24dp"
+        android:orderInCategory="2"
+        app:showAsAction="ifRoom" />
+
+    <item android:id="@+id/trash_memo_main"
+        android:title="@string/create_new"
+        android:icon="@drawable/baseline_delete_white_18dp"
         android:orderInCategory="1"
         app:showAsAction="ifRoom" />
 </menu>

@@ -10,5 +10,6 @@
     <string-array name="memos"></string-array>
     <string name="trash_memo">Trash</string>
     <string name="share_memo">Share</string>
+    <string name="hint"><i>type your keyword</i></string>
 </resources>
 

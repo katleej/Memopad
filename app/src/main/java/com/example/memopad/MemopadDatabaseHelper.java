@@ -31,19 +31,38 @@ public class MemopadDatabaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
     }
 
-    public ArrayList<String> getMessages(){
+    public Cursor getMessages(){
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.query("MEMO_TABLE", new String[]{"MESSAGE"}, null, null, null, null, null, null);
-        while (cursor.moveToNext()) {
-            ArrayList<String> messages = new ArrayList<>();
-            messages.add(cursor.getString(cursor.getColumnIndex("MESSAGE")));
-        }
-        return messages;
+        Cursor cursor = db.rawQuery("SELECT * FROM " + MEMO_TABLE, null);
+        return cursor;
     }
 
-    public void insertMemo(SQLiteDatabase db, String memo) {
+    public Cursor getSortedMessages(String string){
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.query(MEMO_TABLE, new String[] {"MESSAGE"},
+                "MESSAGE = ?", new String[] {string}, null, null, null);
+        return cursor;
+    }
+
+    public boolean insertMemo(String memo) {
+        SQLiteDatabase db = this.getWritableDatabase();
         ContentValues memoValues = new ContentValues();
         memoValues.put("MESSAGE", memo);
-        db.insert("MEMO", null, memoValues);
+        long result = db.insert("MEMO", null, memoValues);
+
+        if (result == -1) {
+            return false;
+        }
+        else {
+            return true;
+        }
     }
+
+    public boolean deleteMemo(String string) {
+        this.getWritableDatabase().delete(MEMO_TABLE, "MESSAGE = ?",
+                new String[] {string});
+        return true;
+    }
+
 }
+

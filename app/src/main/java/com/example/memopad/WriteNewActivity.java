@@ -28,8 +28,9 @@ public class WriteNewActivity extends AppCompatActivity {
 
     private ShareActionProvider shareActionProvider;
     int TEXT_POSITION = -1;
-    SQLiteOpenHelper memopadDatabaseHelper;
+    SQLiteOpenHelper memopadData;
     SQLiteDatabase db;
+    String _message;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,18 +42,18 @@ public class WriteNewActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
+        //initialize db
+        memopadData = new MemopadDatabaseHelper(this);
+        db = memopadData.getWritableDatabase();
+
         //if we are opening up previous message, add that text to the screen
         if (getIntent().getExtras() != null) {
             Intent intent = getIntent();
-            String message = intent.getStringExtra("message");
+            _message = intent.getStringExtra("message");
             TEXT_POSITION = intent.getIntExtra("position", -1);
             EditText layout = (EditText) findViewById(R.id.message);
-            layout.setText(message);
+            layout.setText(_message);
         }
-
-        //initialize db
-        memopadDatabaseHelper = new MemopadDatabaseHelper(this);
-        db = memopadDatabaseHelper.getWritableDatabase();
     }
 
     @Override
@@ -98,9 +99,8 @@ public class WriteNewActivity extends AppCompatActivity {
 
         EditText message = (EditText) findViewById(R.id.message);
         String messageText = message.getText().toString();
-        ContentValues cv = new ContentValues();
-        cv.put("MESSAGE", messageText);
-        db.insert("MEMO", null, cv);
+
+        boolean insertData = ((MemopadDatabaseHelper) memopadData).insertMemo(messageText);
         Intent intent = new Intent(WriteNewActivity.this, ListActivity.class);
         startActivity(intent);
     }
@@ -133,6 +133,8 @@ public class WriteNewActivity extends AppCompatActivity {
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        boolean bool = ((MemopadDatabaseHelper) memopadData).deleteMemo(_message);
+
                         CharSequence text = "Your message has been deleted.";
                         int duration = Toast.LENGTH_SHORT;
                         Toast toast = Toast.makeText(WriteNewActivity.this, text, duration);

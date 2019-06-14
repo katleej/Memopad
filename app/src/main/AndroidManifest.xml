@@ -9,11 +9,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ListActivity"
-            android:label="My Notes"/>
-        <activity android:name=".WriteNewActivity"
+        <activity
+            android:name=".DeleteOptionActivity">
+            android:label="Select All" />
+        </activity>
+        <activity
+            android:name=".ListActivity"
+            android:label="My Notes" />
+        <activity
+            android:name=".WriteNewActivity"
             android:label="New"
-            android:parentActivityName=".ListActivity"/>
+            android:parentActivityName=".ListActivity" />
         <activity
             android:name=".MainActivity"
             android:label="Memo Pad">

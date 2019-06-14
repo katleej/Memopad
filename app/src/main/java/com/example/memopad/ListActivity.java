@@ -29,7 +29,7 @@ import java.util.ArrayList;
 public class ListActivity extends AppCompatActivity {
 
     private ArrayList<String> _messages = new ArrayList<String>();
-    private SQLiteDatabase db;
+    private MemopadDatabaseHelper myDB;
     private Cursor cursor;
 
     @Override
@@ -40,22 +40,29 @@ public class ListActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        MemopadDatabaseHelper memopadDatabaseHelper = new MemopadDatabaseHelper(this);
-        db = memopadDatabaseHelper.getWritableDatabase();
+        //Pull up my listview
+        ListView listView = findViewById(R.id.listview);
+        myDB = new MemopadDatabaseHelper(this);
+        cursor = myDB.getMessages();
 
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
-                ListActivity.this, android.R.layout.simple_list_item_1, memopadDatabaseHelper.getMessages());
+        while(cursor.moveToNext()) {
+            _messages.add(0, cursor.getString(1));
+            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
+                    ListActivity.this, android.R.layout.simple_list_item_1, _messages);
+            listView.setAdapter(arrayAdapter);
+        }
+
 
         //Set my listview with the received message
-        ListView listView = findViewById(R.id.listview);
         AdapterView.OnItemClickListener itemClickListener =
                 new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        String message = Message.messages.get(position);
+
+                        String message = _messages.get(position);
                         Intent intent = new Intent(ListActivity.this, WriteNewActivity.class);
                         intent.putExtra("message", message);
-                        intent.putExtra("position", position);
+                        intent.putExtra("position", _messages.size() - position);
                         startActivity(intent);
                     }
                 };
@@ -75,6 +82,10 @@ public class ListActivity extends AppCompatActivity {
                 Intent intent = new Intent(ListActivity.this, WriteNewActivity.class);
                 startActivity(intent);
                 return true;
+            case R.id.trash_memo_main:
+                Intent intent2 = new Intent(ListActivity.this, DeleteOptionActivity.class);
+                startActivity(intent2);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -83,5 +94,21 @@ public class ListActivity extends AppCompatActivity {
     public void onClickAdd(View view) {
         Intent intent = new Intent(ListActivity.this, WriteNewActivity.class);
         startActivity(intent);
+    }
+
+    public void onClickSearch(View view) {
+        EditText editText = (EditText) findViewById(R.id.search_tool);
+        String keyword = editText.getText().toString();
+        myDB = new MemopadDatabaseHelper(this);
+        cursor = myDB.getSortedMessages(keyword);
+        ListView listView = findViewById(R.id.listview);
+        while(cursor.moveToNext()) {
+            _messages.add(0, cursor.getString(1));
+            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
+                    ListActivity.this, android.R.layout.simple_list_item_1, _messages);
+            listView.setAdapter(arrayAdapter);
+        }
+
+
     }
 }
