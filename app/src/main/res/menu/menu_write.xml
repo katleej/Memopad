@@ -10,6 +10,12 @@
 
     <item android:id="@+id/share_memo"
         android:title="@string/share_memo"
+        android:icon="@drawable/baseline_share_white_18dp"
         android:orderInCategory="2"
+        app:showAsAction="ifRoom" />
+
+    <item android:id="@+id/save_memo"
+        android:title="Save"
+        android:orderInCategory="3"
         app:showAsAction="ifRoom" />
 </menu>

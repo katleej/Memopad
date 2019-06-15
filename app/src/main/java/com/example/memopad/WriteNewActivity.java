@@ -82,6 +82,9 @@ public class WriteNewActivity extends AppCompatActivity {
                 setShareActionIntent(messageText);
                 return true;
 
+            case R.id.save_memo:
+                onClickSave(findViewById(R.id.save));
+
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -94,7 +97,7 @@ public class WriteNewActivity extends AppCompatActivity {
         toast.show();
 
         if (TEXT_POSITION != -1) {
-            db.delete("MEMO", "_id = ?", new String[] {Integer.toString(TEXT_POSITION)});
+            ((MemopadDatabaseHelper) memopadData).deleteMemo(_message);
         }
 
         EditText message = (EditText) findViewById(R.id.message);
@@ -105,11 +108,6 @@ public class WriteNewActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public String onClickShare() {
-        EditText message = (EditText) findViewById(R.id.message);
-        String messageText = message.getText().toString();
-        return messageText;
-    }
 
     public void onClickDelete(View view) {
         alert();
@@ -133,8 +131,7 @@ public class WriteNewActivity extends AppCompatActivity {
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        boolean bool = ((MemopadDatabaseHelper) memopadData).deleteMemo(_message);
-
+                        ((MemopadDatabaseHelper) memopadData).deleteMemo(_message);
                         CharSequence text = "Your message has been deleted.";
                         int duration = Toast.LENGTH_SHORT;
                         Toast toast = Toast.makeText(WriteNewActivity.this, text, duration);

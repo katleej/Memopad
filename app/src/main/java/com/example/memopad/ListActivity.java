@@ -3,22 +3,18 @@ package com.example.memopad;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.ActionBar;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AppCompatActivity;
-import android.support.design.widget.FloatingActionButton;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 
 import java.util.ArrayList;
 
@@ -28,9 +24,13 @@ import java.util.ArrayList;
  */
 public class ListActivity extends AppCompatActivity {
 
-    private ArrayList<String> _messages = new ArrayList<String>();
-    private MemopadDatabaseHelper myDB;
+    private ArrayList<String> dictionary = new ArrayList<String>();
+    private MemopadDatabaseHelper databaseHelper;
+    private SQLiteDatabase db;
     private Cursor cursor;
+    private Cursor cursorHidden;
+    private String message;
+    private int count;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,34 +40,45 @@ public class ListActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
         //Pull up my listview
         ListView listView = findViewById(R.id.listview);
-        myDB = new MemopadDatabaseHelper(this);
-        cursor = myDB.getMessages();
-
-        while(cursor.moveToNext()) {
-            _messages.add(0, cursor.getString(1));
-            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
-                    ListActivity.this, android.R.layout.simple_list_item_1, _messages);
-            listView.setAdapter(arrayAdapter);
-        }
-
+        databaseHelper = new MemopadDatabaseHelper(this);
+        db = databaseHelper.getReadableDatabase();
+        cursor = db.query("MEMO", new String[]{"_id", "MESSAGE"},
+                null, null, null, null, "_id DESC");
+        final SimpleCursorAdapter simpleCursorAdapter = new SimpleCursorAdapter(this,
+                android.R.layout.simple_list_item_1,
+                cursor,
+                new String[]{"MESSAGE"}, new int[]{android.R.id.text1}, 0);
+        listView.setAdapter(simpleCursorAdapter);
 
         //Set my listview with the received message
         AdapterView.OnItemClickListener itemClickListener =
                 new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                        String message = _messages.get(position);
+                        message = simpleCursorAdapter.getCursor().getString(1);
                         Intent intent = new Intent(ListActivity.this, WriteNewActivity.class);
                         intent.putExtra("message", message);
-                        intent.putExtra("position", _messages.size() - position);
+                        intent.putExtra("position", position);
                         startActivity(intent);
                     }
                 };
         listView.setOnItemClickListener(itemClickListener);
-}
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        cursor.close();
+        db.close();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        return super.onKeyDown(keyCode, event);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -97,18 +108,41 @@ public class ListActivity extends AppCompatActivity {
     }
 
     public void onClickSearch(View view) {
+        ListView listView = findViewById(R.id.listview);
+        listView.setVisibility(View.INVISIBLE);
+
+        ListView hiddenView = findViewById(R.id.hiddenlist);
+        hiddenView.setVisibility(View.VISIBLE);
+
         EditText editText = (EditText) findViewById(R.id.search_tool);
         String keyword = editText.getText().toString();
-        myDB = new MemopadDatabaseHelper(this);
-        cursor = myDB.getSortedMessages(keyword);
-        ListView listView = findViewById(R.id.listview);
-        while(cursor.moveToNext()) {
-            _messages.add(0, cursor.getString(1));
-            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
-                    ListActivity.this, android.R.layout.simple_list_item_1, _messages);
-            listView.setAdapter(arrayAdapter);
+
+        //creating dictionary
+        dictionary = new ArrayList<String>();
+        cursor = db.query("MEMO", new String[]{"_id", "MESSAGE"},
+                null, null, null, null, "_id DESC");
+        while (cursor.moveToNext()) {
+            String message = cursor.getString(1);
+            if (message.contains(keyword)) {
+                dictionary.add(0, message);
+            }
+            ArrayAdapter<String> dictionaryAdapter = new ArrayAdapter<String>(
+                    ListActivity.this, android.R.layout.simple_list_item_1, dictionary);
+            hiddenView.setAdapter(dictionaryAdapter);
+
+            AdapterView.OnItemClickListener hiddenItemClickListener =
+                    new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            String message = dictionary.get(position);
+                            Intent intent = new Intent(ListActivity.this, WriteNewActivity.class);
+                            intent.putExtra("message", message);
+                            intent.putExtra("position", position);
+                            startActivity(intent);
+                        }
+                    };
+            hiddenView.setOnItemClickListener(hiddenItemClickListener);
+
         }
-
-
     }
 }

@@ -6,15 +6,13 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import java.util.ArrayList;
-
 public class MemopadDatabaseHelper extends SQLiteOpenHelper {
 
-    private static final String DB_NAME = "memopad";
+    private static final String DB_NAME = "memopad.db";
     private static final int DB_VERSION = 1;
+    private int count = 0;
     public static final String MEMO_TABLE = "MEMO";
-
-    private ArrayList<String> messages = Message.messages;
+    public static SQLiteDatabase db;
 
     MemopadDatabaseHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -38,14 +36,14 @@ public class MemopadDatabaseHelper extends SQLiteOpenHelper {
     }
 
     public Cursor getSortedMessages(String string){
-        SQLiteDatabase db = this.getWritableDatabase();
+        db = this.getWritableDatabase();
         Cursor cursor = db.query(MEMO_TABLE, new String[] {"MESSAGE"},
                 "MESSAGE = ?", new String[] {string}, null, null, null);
         return cursor;
     }
 
     public boolean insertMemo(String memo) {
-        SQLiteDatabase db = this.getWritableDatabase();
+        db = this.getWritableDatabase();
         ContentValues memoValues = new ContentValues();
         memoValues.put("MESSAGE", memo);
         long result = db.insert("MEMO", null, memoValues);
@@ -58,11 +56,10 @@ public class MemopadDatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    public boolean deleteMemo(String string) {
-        this.getWritableDatabase().delete(MEMO_TABLE, "MESSAGE = ?",
-                new String[] {string});
-        return true;
+    public void deleteMemo(String message) {
+            db = this.getWritableDatabase();
+            db.delete("MEMO", "MESSAGE = ?", new String[] {message});
+        }
     }
 
-}
 

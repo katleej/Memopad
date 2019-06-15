@@ -10,19 +10,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".DeleteOptionActivity">
+            android:name=".DeleteOptionActivity"
             android:label="Select All" />
-        </activity>
-        <activity
-            android:name=".ListActivity"
-            android:label="My Notes" />
         <activity
             android:name=".WriteNewActivity"
             android:label="New"
             android:parentActivityName=".ListActivity" />
         <activity
-            android:name=".MainActivity"
-            android:label="Memo Pad">
+            android:name=".ListActivity"
+            android:label="My Notes">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
